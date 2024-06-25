@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16
+    restart: always
+    volumes:
+      - app-db-data:/var/lib/postgresql/data/pgdata
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=${POSTGRES__USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES__PASSWORD?Variable not set}
+      - POSTGRES_DB=${POSTGRES__DB?Variable not set}
+  backend:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=${POSTGRES__PORT}
+      - POSTGRES_USER=${POSTGRES__USER?Variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES__PASSWORD?Variable not set}
+      - POSTGRES_DB=${POSTGRES__DB?Variable not set}
+    volumes:
+      - ./app:/app/app
+    build:
+      context: .
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-false}
+    platform: linux/amd64
+    command: app/scripts/start.sh
+
+volumes:
+  app-db-data:
