@@ -1,13 +1,7 @@
 #! /usr/bin/env sh
 set -e
 
-if [ -f "/app/app/main.py" ]; then
-    DEFAULT_MODULE_NAME=app.main
-else
-    echo "Can't find main.py in /app/app/main.py"
-    exit 1
-fi
-MODULE_NAME=${MODULE_NAME:-$DEFAULT_MODULE_NAME}
+MODULE_NAME=${MODULE_NAME}
 VARIABLE_NAME=${VARIABLE_NAME:-app}
 export APP_MODULE=${APP_MODULE:-"$MODULE_NAME:$VARIABLE_NAME"}
 
