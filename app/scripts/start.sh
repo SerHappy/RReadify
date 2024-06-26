@@ -15,7 +15,7 @@ HOST=${BACKEND__HOST:-0.0.0.0}
 PORT=${BACKEND__PORT:-80}
 LOG_LEVEL=${LOG_LEVEL:-debug}
 
-RUN_PRE_START=${RUN_PRE_START:-false}W
+RUN_PRE_START=${RUN_PRE_START:-false}
 if [ "$RUN_PRE_START" = true ]; then
     PRE_START_PATH=${PRE_START_PATH:-/app/app/scripts/prestart.sh}
     echo "Checking for script in $PRE_START_PATH"
