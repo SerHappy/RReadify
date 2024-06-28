@@ -1,5 +1,2 @@
-from sqlalchemy.orm import DeclarativeBase
-
-
-class Base(DeclarativeBase):
+class Base:
     """Base class for all models."""

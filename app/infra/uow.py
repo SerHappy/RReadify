@@ -4,6 +4,7 @@ from typing import Self
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.core.config import settings
+from app.infra.repositories.user import AbstractUserRepository, UserRepository
 
 session_factory: async_sessionmaker[AsyncSession] = async_sessionmaker(
     create_async_engine(
@@ -20,6 +21,8 @@ class AbstractUnitOfWork(abc.ABC):
 
     All unit of work classes should implement this interface.
     """
+
+    user: AbstractUserRepository
 
     async def __aenter__(self) -> Self:
         """
@@ -87,6 +90,7 @@ class SQLALchemyUnitOfWork(AbstractUnitOfWork):
     async def __aenter__(self) -> Self:
         """Initializes the session and repositories."""
         self.session = self.session_factory()
+        self.user = UserRepository(self.session)
         return await super().__aenter__()
 
     async def __aexit__(self, *args) -> None:

@@ -18,12 +18,6 @@ services:
       - db
     env_file:
       - .env
-    environment:
-      - POSTGRES_SERVER=db
-      - POSTGRES_PORT=${POSTGRES__PORT}
-      - POSTGRES_USER=${POSTGRES__USER?Variable not set}
-      - POSTGRES_PASSWORD=${POSTGRES__PASSWORD?Variable not set}
-      - POSTGRES_DB=${POSTGRES__DB?Variable not set}
     volumes:
       - ./app:/app/app
     build:

@@ -1,11 +1,29 @@
+import logging
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-from app.schemas.user import UserInput
+from app.api.routes.register import register_router
+from app.infra.orm import start_mappers
 
-app = FastAPI()
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
 
 
-@app.get("/")
-def hello_world(data: UserInput) -> dict[str, str]:
-    """Stub function to test the API is working."""
-    return {"message": "Hello World"}
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator:
+    """Starts the mappers when the application starts."""
+    start_mappers()
+    yield
+
+
+logger.info("Setting up application")
+
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(register_router, prefix="/register", tags=["register"])

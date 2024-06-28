@@ -8,7 +8,7 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from app.models import Base
+from app.infra.orm import mapper_registry
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -23,7 +23,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata
+target_metadata = mapper_registry.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -32,11 +32,11 @@ target_metadata = Base.metadata
 
 
 def _get_url() -> str:
-    user = os.getenv("POSTGRES_USER", "postgres")
-    password = os.getenv("POSTGRES_PASSWORD", "postgres")
-    server = os.getenv("POSTGRES_SERVER", "db")
-    port = os.getenv("POSTGRES_PORT", "5432")
-    db = os.getenv("POSTGRES_DB", "app")
+    user = os.getenv("POSTGRES__USER", "postgres")
+    password = os.getenv("POSTGRES__PASSWORD", "postgres")
+    server = os.getenv("POSTGRES__SERVER", "db")
+    port = os.getenv("POSTGRES__PORT", "5432")
+    db = os.getenv("POSTGRES__DB", "app")
     return f"postgresql+asyncpg://{user}:{password}@{server}:{port}/{db}"
 
 
