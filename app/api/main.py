@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.api.routes.register import register_router
-from app.infra.orm import start_mappers
+from app.bootstrap import bootstrap
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -18,7 +18,7 @@ logging.basicConfig(
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:
     """Starts the mappers when the application starts."""
-    start_mappers()
+    bootstrap()
     yield
 
 
