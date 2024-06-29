@@ -4,26 +4,22 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from app.api.middlewares.duration import request_duration
 from app.api.routes.register import register_router
 from app.bootstrap import bootstrap
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler()],
-)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:
-    """Starts the mappers when the application starts."""
+    """Context manager to start and stop the application."""
     bootstrap()
     yield
+    logger.info("Shutting down application")
 
-
-logger.info("Setting up application")
 
 app = FastAPI(lifespan=lifespan)
 
+app.middleware("http")(request_duration)
 app.include_router(register_router, prefix="/register", tags=["register"])
