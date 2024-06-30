@@ -3,7 +3,8 @@ from fastapi.routing import APIRouter
 
 from app.api.deps import UoW
 from app.domain.user import exceptions
-from app.schemas.user import Message, UserInput
+from app.schemas.message import Message
+from app.schemas.user import UserInput
 from app.services import email
 from app.services.user.create import CreateUserUseCase
 from app.services.user.get import GetUserUseCase
@@ -56,7 +57,7 @@ async def register(
     )
 
 
-@register_router.post("/verify-email", response_model=Message)
+@register_router.get("/verify-email", response_model=Message)
 async def verify_email(token: str, uow: UoW) -> Message:
     """Verify email endpoint."""
     user_email = email.verify_email_token(token)

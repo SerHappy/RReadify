@@ -40,7 +40,7 @@ class EmailSettings(BaseModel):
 class SecuritySettings(BaseModel):
     """Security settings."""
 
-    DOMAIN: str = "localhost:8000"
+    DOMAIN: str = "http://localhost:8000"
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE: int = 3600  # 1 hour

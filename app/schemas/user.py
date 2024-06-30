@@ -26,10 +26,3 @@ class UserOutput(UserBase):
 
     id: UUID
     is_verified: bool = False
-
-
-class Message(BaseModel):
-    """Message schema."""
-
-    message: str
-    status: int

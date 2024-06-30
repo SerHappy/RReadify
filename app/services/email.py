@@ -83,6 +83,6 @@ def verify_email_token(token: str) -> str | None:
 def _render_email_template(template_name: str, context: dict[str, Any]) -> str:
     """Render email template."""
     template_str = (
-        Path(__file__).parent.parent.parent / "templates" / template_name
+        Path(__file__).parent.parent / "templates" / template_name
     ).read_text()
     return Template(template_str).render(context)

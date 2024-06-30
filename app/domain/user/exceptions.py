@@ -28,3 +28,7 @@ class UserAlreadyVerifiedError(BaseUserError):
 
 class UserNotVerifiedError(BaseUserError):
     """User is not verified."""
+
+
+class InvalidCredentialsError(BaseUserError):
+    """Invalid credentials."""
