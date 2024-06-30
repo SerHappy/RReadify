@@ -3,7 +3,7 @@ from fastapi.routing import APIRouter
 
 from app.api.deps import UoW
 from app.domain.user import exceptions
-from app.schemas.user import Message, UserInput, UserOutput
+from app.schemas.user import Message, UserInput
 from app.services import email
 from app.services.user.create import CreateUserUseCase
 from app.services.user.get import GetUserUseCase
@@ -12,12 +12,12 @@ from app.services.user.verify import VerifyUserUseCase
 register_router = APIRouter()
 
 
-@register_router.post("/", response_model=UserOutput)
+@register_router.post("/", response_model=Message)
 async def register(
     user_data: UserInput,
     uow: UoW,
     background_tasks: BackgroundTasks,
-) -> UserOutput:
+) -> Message:
     """Registration endpoint."""
     service = CreateUserUseCase(uow)
     try:
@@ -50,7 +50,10 @@ async def register(
         "Confirm your email",
         content,
     )
-    return UserOutput.model_validate(user)
+    return Message(
+        message="User registration successful. Check your email to verify it.",
+        status=status.HTTP_201_CREATED,
+    )
 
 
 @register_router.post("/verify-email", response_model=Message)
