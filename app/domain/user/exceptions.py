@@ -17,5 +17,14 @@ class PasswordTooCommonError(BaseUserError):
 class UserNotFoundError(BaseUserError):
     """User not found."""
 
+
 class UserAlreadyExistsError(BaseUserError):
     """User already exists."""
+
+
+class UserAlreadyVerifiedError(BaseUserError):
+    """User is already verified."""
+
+
+class UserNotVerifiedError(BaseUserError):
+    """User is not verified."""

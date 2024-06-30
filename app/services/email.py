@@ -62,8 +62,8 @@ def generate_confirmation_token(email: str) -> str:
     )
 
 
-def verify_confirmation_token(token: str) -> str | None:
-    """Verifies the email confirmation token and returns the email if valid."""
+def verify_email_token(token: str) -> str | None:
+    """Verifies the email token."""
     try:
         decoded_token = jwt.decode(
             token,

@@ -40,12 +40,13 @@ class EmailSettings(BaseModel):
 class SecuritySettings(BaseModel):
     """Security settings."""
 
+    DOMAIN: str = "localhost:8000"
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE: int = 3600  # 1 hour
     EMAIL_CONFIRMATION_EXPIRE: int = 600  # 10 minutes
     EMAIL_TOKEN_TYPE: str = "email_confirmation"
-    EMAIL_CONFIRM_URL: str = "http://127.0.0.1:8000/api/v1/registration/confirm"
+    EMAIL_CONFIRM_URL: str = DOMAIN + "/register/verify-email"
 
 
 class Settings(BaseSettings):

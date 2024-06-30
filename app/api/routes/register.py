@@ -3,9 +3,11 @@ from fastapi.routing import APIRouter
 
 from app.api.deps import UoW
 from app.domain.user import exceptions
-from app.schemas.user import UserInput, UserOutput
-from app.services.user import email
+from app.schemas.user import Message, UserInput, UserOutput
+from app.services import email
 from app.services.user.create import CreateUserUseCase
+from app.services.user.get import GetUserUseCase
+from app.services.user.verify import VerifyUserUseCase
 
 register_router = APIRouter()
 
@@ -49,3 +51,25 @@ async def register(
         content,
     )
     return UserOutput.model_validate(user)
+
+
+@register_router.post("/verify-email", response_model=Message)
+async def verify_email(token: str, uow: UoW) -> Message:
+    """Verify email endpoint."""
+    user_email = email.verify_email_token(token)
+    if not user_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid token.",
+        )
+    get_service = GetUserUseCase(uow)
+    user = await get_service.get_by_email(user_email)
+    verify_service = VerifyUserUseCase(uow)
+    try:
+        await verify_service.execute(user)
+    except exceptions.UserAlreadyVerifiedError:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="User is already verified.",
+        ) from None
+    return Message(message="Email verified.", status=status.HTTP_202_ACCEPTED)
